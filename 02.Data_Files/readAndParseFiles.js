@@ -3,8 +3,6 @@ const fs = require("fs");
 const jsonFilePath = `${__dirname}/me.json`;
 const jsonFileContent = fs.readFileSync(jsonFilePath, "utf-8");
 
-const jsonFile = JSON.parse(jsonFileContent);
-
 console.log("JSON File Content:");
 
 console.log(jsonFileContent);
