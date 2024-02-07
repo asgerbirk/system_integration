@@ -5,6 +5,8 @@ const jsonFileContent = fs.readFileSync(jsonFilePath, "utf-8");
 
 const jsonFile = JSON.parse(jsonFileContent);
 
+console.log("JSON File Content:");
+
 console.log(jsonFile);
 // YAML --------------------------------------------------------------------------------------
 const yaml = require("js-yaml");
@@ -14,6 +16,8 @@ const yamlFilePath = `${__dirname}/me.yaml`;
 const readFile = fs.readFileSync(yamlFilePath, "utf8");
 
 const yamlFile = yaml.load(readFile);
+
+console.log("YAML File Content:");
 
 console.log(yamlFile);
 
@@ -29,6 +33,8 @@ const parser = new XMLParser();
 
 const xmlFile = parser.parse(xmlContent);
 
+console.log("XML File Content:");
+
 console.log(xmlFile);
 
 const hobbiesArray = xmlFile.me.hobbies.hobby;
@@ -41,6 +47,7 @@ const results = [];
 
 const csvFilePath = `${__dirname}/me.csv`;
 
+console.log("CSV File Content:");
 fs.createReadStream(csvFilePath)
   .pipe(csv())
   .on("data", (data) => results.push(data))
