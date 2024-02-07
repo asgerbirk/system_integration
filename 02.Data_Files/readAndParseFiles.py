@@ -7,7 +7,6 @@ root = tree.getroot()
 print("XML Data:")
 for child in root:
     print(child.tag, child.text)
-    # Check if the current element has child elements
     if len(list(child)) > 0:
         for subChild in child:
             print(subChild.tag, subChild.text)
