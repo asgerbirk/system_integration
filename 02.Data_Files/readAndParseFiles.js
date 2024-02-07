@@ -7,6 +7,7 @@ const jsonFile = JSON.parse(jsonFileContent);
 
 console.log("JSON File Content:");
 
+console.log(jsonFileContent);
 console.log(jsonFile);
 // YAML --------------------------------------------------------------------------------------
 const yaml = require("js-yaml");
