@@ -1,57 +1,36 @@
-const fs = require("fs");
-//JSON----------------------------------------------------------------------------------------
-const jsonFilePath = `${__dirname}/me.json`;
-const jsonFileContent = fs.readFileSync(jsonFilePath, "utf-8");
+import fs from "fs";
+import yaml from "js-yaml";
+import { XMLParser } from "fast-xml-parser";
+import csv from "csv-parser";
 
-console.log("JSON File Content:");
+export function readJSON(filePath) {
+  const fileContent = fs.readFileSync(filePath, "utf-8");
+  return JSON.parse(fileContent);
+}
 
-console.log(jsonFileContent);
-console.log(jsonFile);
-// YAML --------------------------------------------------------------------------------------
-const yaml = require("js-yaml");
+export function readYAML(filePath) {
+  const fileContent = fs.readFileSync(filePath, "utf-8");
+  return yaml.load(fileContent);
+}
 
-const yamlFilePath = `${__dirname}/me.yaml`;
+export function readXML(filePath) {
+  const fileContent = fs.readFileSync(filePath, "utf-8");
+  const parser = new XMLParser();
+  return parser.parse(fileContent);
+}
 
-const readFile = fs.readFileSync(yamlFilePath, "utf8");
+export async function readCSV(filePath) {
+  const results = [];
+  const stream = fs.createReadStream(filePath).pipe(csv());
 
-const yamlFile = yaml.load(readFile);
+  for await (const data of stream) {
+    results.push(data);
+  }
 
-console.log("YAML File Content:");
+  return results;
+}
 
-console.log(yamlFile);
-
-//XML ----------------------------------------------------------------------------------------
-
-const { XMLParser } = require("fast-xml-parser");
-
-const xmlFilePath = `${__dirname}/me.xml`;
-
-const xmlContent = fs.readFileSync(xmlFilePath, "utf8");
-
-const parser = new XMLParser();
-
-const xmlFile = parser.parse(xmlContent);
-
-console.log("XML File Content:");
-
-console.log(xmlFile);
-
-const hobbiesArray = xmlFile.me.hobbies.hobby;
-console.log("Hobbies Array:");
-console.log(hobbiesArray);
-
-//CSV ----------------------------------------------------------------------------------------
-const csv = require("csv-parser");
-const results = [];
-
-const csvFilePath = `${__dirname}/me.csv`;
-
-console.log("CSV File Content:");
-fs.createReadStream(csvFilePath)
-  .pipe(csv())
-  .on("data", (data) => results.push(data))
-  .on("end", () => {
-    console.log(results);
-  });
-
-//TXT ----------------------------------------------------------------------------------------
+export function readTextFile(filePath) {
+  const fileContent = fs.readFileSync(filePath, "utf-8");
+  return { text: fileContent };
+}

@@ -10,6 +10,7 @@ for child in root:
     if len(list(child)) > 0:
         for subChild in child:
             print(subChild.tag, subChild.text)
+            tree = ET.parse("me.xml")
 
 
 # CSV ----------------------------------------------------------------------------------------
@@ -39,3 +40,14 @@ with open("me.json", "r") as jsonFile:
     data = json.load(jsonFile)
     print("JSON Data:")
     print(data)
+
+# Text ----------------------------------------------------------------------------------------
+
+file_path = "me.txt"
+
+with open(file_path, "r") as file:
+    file_content = file.read()
+
+dict_data = {"text": file_content}
+
+print(dict_data)
