@@ -1,1 +1,3 @@
-Jeg hedder Asger og jeg er 25 år
+name: Asger
+Age: 25
+Hobbies: Eating and Sleeping
