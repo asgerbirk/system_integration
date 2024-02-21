@@ -32,5 +32,20 @@ export async function readCSV(filePath) {
 
 export function readTextFile(filePath) {
   const fileContent = fs.readFileSync(filePath, "utf-8");
-  return { text: fileContent };
+  // Opdel indholdet i linjer
+  const lines = fileContent.split("\n");
+
+  // Initialiser et objekt til at holde de parrede data
+  const parsedData = {};
+
+  // Iterer over hver linje for at ekstrahere nøgle-værdi-par
+  lines.forEach((line) => {
+    const [key, value] = line.split(":").map((part) => part.trim()); // Opdel ved ':' og trim whitespace
+    if (key && value) {
+      parsedData[key] = value;
+    }
+  });
+
+  // Returner det parsede objekt
+  return parsedData;
 }
