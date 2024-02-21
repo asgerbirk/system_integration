@@ -43,8 +43,8 @@ def read_xml():
     return data
 
 
-@app.get("/requestExpressAPI/{file_type}")
+@app.get("/requestExpress/{file_type}")
 def request_express(file_type: str):
-    response = requests.get("http://localhost:8000/" + file_type)
+    response = requests.get("http://localhost:8080/" + file_type)
     result = response.json()
     return result

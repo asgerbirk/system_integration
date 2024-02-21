@@ -9,11 +9,20 @@ def parse_xml_file(file_path):
     tree = ET.parse(file_path)
     root = tree.getroot()
     xml_dict = {}
+
     for child in root:
         if len(child) > 0:
-            xml_dict[child.tag] = {item.tag: item.text for item in child}
-        else:
+            if child.tag not in xml_dict:
+                xml_dict[child.tag] = {}
+            for item in child:
+                if item.tag in xml_dict[child.tag]:
+                    # Hvis det allerede er en liste, tilføj til den liste
+                    xml_dict[child.tag][item.tag].append(item.text)
+                else:
+                    # Hvis det ikke er en liste, lav det til en liste med det nuværende element
+                    xml_dict[child.tag][item.tag] = [item.text]
             xml_dict[child.tag] = child.text
+
     return xml_dict
 
 
@@ -22,6 +31,7 @@ def parse_csv_file(file_path):
     with open(file_path, newline="") as csvfile:
         reader = csv.DictReader(csvfile)
         csv_data = [row for row in reader]
+        print(csv_data)
     return csv_data
 
 
