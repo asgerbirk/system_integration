@@ -1,9 +1,11 @@
 import express from "express";
 import { setupDb } from "./database.js";
 import bodyParser from "body-parser";
+import axios from "axios";
 
 const app = express();
 app.use(bodyParser.json());
+app.use(express.json());
 
 const dbPromise = setupDb();
 
@@ -54,10 +56,21 @@ app.post("/ping", async (req, res) => {
   ]);
   console.log(`Found webhooks for event type '${eventType}':`, webhooks);
 
-  webhooks.forEach((webhook) => {
-    console.log(`Pinging ${webhook.url}`);
-    // Here you'd normally send a HTTP request to the webhook.url using a library like axios or fetch
-  });
+  // Initialize an array to collect promises
+  const fetchPromises = webhooks.map((webhook) =>
+    fetch(webhook.url, {
+      method: "POST",
+      body: JSON.stringify({ eventType }),
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((response) =>
+        console.log(`Pinged ${webhook.url} successfully`, response)
+      )
+      .catch((error) => console.error(`Error pinging ${webhook.url}:`, error))
+  );
+
+  // Wait for all fetch requests to complete
+  await Promise.all(fetchPromises);
 
   res.send("Pinged all matching webhooks.");
 });
