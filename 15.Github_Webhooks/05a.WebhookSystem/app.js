@@ -45,32 +45,30 @@ app.post("/unregister", async (req, res) => {
 app.post("/ping", async (req, res) => {
   const { eventType } = req.body;
   console.log("Pinging event type:", eventType);
-  const db = await dbPromise;
 
   if (!validEventTypes.includes(eventType)) {
     return res.status(400).send("Invalid event type");
   }
 
-  const webhooks = await db.all("SELECT * FROM webhooks WHERE eventType = ?", [
-    eventType,
-  ]);
+  const db = await dbPromise;
+  const webhooks = await db.all(
+    "SELECT url FROM webhooks WHERE eventType = ?",
+    eventType
+  );
   console.log(`Found webhooks for event type '${eventType}':`, webhooks);
 
-  // Initialize an array to collect promises
-  const fetchPromises = webhooks.map((webhook) =>
-    fetch(webhook.url, {
+  const fetchPromises = webhooks.map(async (webhook) => {
+    const response = await fetch(webhook.url, {
       method: "POST",
       body: JSON.stringify({ eventType }),
       headers: { "Content-Type": "application/json" },
-    })
-      .then((response) =>
-        console.log(`Pinged ${webhook.url} successfully`, response)
-      )
-      .catch((error) => console.error(`Error pinging ${webhook.url}:`, error))
-  );
+    });
+    const result = await response.json(); // Directly await the JSON result
+    console.log(`Response from ${webhook.url}:`, result);
+    return result;
+  });
 
   // Wait for all fetch requests to complete
-  await Promise.all(fetchPromises);
 
   res.send("Pinged all matching webhooks.");
 });
