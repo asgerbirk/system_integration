@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Python SSE</title>
+  </head>
+  <body>
+    <h1>SSE</h1>
+    <div id="date"></div>
+    <script>
+      const date = document.getElementById("date");
+      //EventSource is a built-in object in JavaScript that allows you to open a connection to a server and receive events from it.
+      const eventSource = new EventSource("/sse");
+      //The onmessage event handler is called when the server sends a message to the client.
+      eventSource.onmessage = (event) => {
+        date.textContent = event.data;
+      };
+    </script>
+  </body>
+</html>

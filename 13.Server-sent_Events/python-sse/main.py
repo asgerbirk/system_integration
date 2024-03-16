@@ -1,0 +1,32 @@
+from fastapi import FastAPI, Request
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import StreamingResponse
+from datetime import datetime
+import asyncio
+
+app = FastAPI()
+
+templates = Jinja2Templates(directory="templates")
+
+
+@app.get("/")
+def serve_root_page(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+
+
+now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+print(now)
+
+
+# denne funktion er en generator, som returnerer en dato hver gang den kaldes. Den venter 1 sekund mellem hver gang.
+# yield
+async def date_generator():
+    while True:
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        yield f"data: {now}\n\n"
+        await asyncio.sleep(1)
+
+
+@app.get("/sse")
+def sse(request: Request):
+    return StreamingResponse(date_generator(), media_type="text/event-stream")
