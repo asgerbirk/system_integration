@@ -11,12 +11,7 @@ dbPromise
   .then(() => console.log("Database is ready."))
   .catch((error) => console.error("Database setup failed:", error));
 
-const validEventTypes = [
-  "payment received",
-  "payment processed",
-  "invoice processing",
-  "invoice completed",
-];
+const validEventTypes = ["payment received", "payment processed"];
 
 app.post("/register", async (req, res) => {
   const { url, eventType } = req.body;
