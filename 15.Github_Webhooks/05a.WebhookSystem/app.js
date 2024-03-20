@@ -57,18 +57,23 @@ app.post("/ping", async (req, res) => {
   );
   console.log(`Found webhooks for event type '${eventType}':`, webhooks);
 
-  const fetchPromises = webhooks.map(async (webhook) => {
-    const response = await fetch(webhook.url, {
-      method: "POST",
-      body: JSON.stringify({ eventType }),
-      headers: { "Content-Type": "application/json" },
-    });
-    const result = await response.json(); // Directly await the JSON result
-    console.log(`Response from ${webhook.url}:`, result);
-    return result;
-  });
-
-  // Wait for all fetch requests to complete
+  await Promise.all(
+    webhooks.map(
+      (webhook) =>
+        fetch(webhook.url, {
+          method: "POST",
+          body: JSON.stringify({ eventType }),
+          headers: { "Content-Type": "application/json" },
+        })
+          .then((response) => response.json())
+          .then((result) =>
+            console.log(`Response from ${webhook.url}:`, result)
+          )
+          .catch((error) =>
+            console.error(`Error fetching ${webhook.url}:`, error)
+          ) // Catch errors per-fetch
+    )
+  );
 
   res.send("Pinged all matching webhooks.");
 });
