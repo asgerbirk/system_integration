@@ -63,7 +63,7 @@ app.post("/ping", async (req, res) => {
       body: JSON.stringify({ eventType }),
       headers: { "Content-Type": "application/json" },
     });
-    const result = await response.json(); // Directly await the JSON result
+    const result = await response.json();
     console.log(`Response from ${webhook.url}:`, result);
     return result;
   });
